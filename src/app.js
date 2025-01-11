@@ -65,3 +65,37 @@ app.delete("/user", (req, res) => {
   console.log("deleted user from database");
   res.send("deleted user from database");
 });
+
+// url/search params, ex: http://localhost:3000/user/1
+app.get("/user/:id", (req, res) => {
+  console.log(req.params);
+  res.send("user details");
+});
+
+// query params, ex: http://localhost:3000/user?id=1
+app.get("/user", (req, res) => {
+  console.log(req.query);
+  res.send("user details");
+});
+
+// ex: ? means optional, use?r matches usr, user
+app.get("/use?r", (req, res) => {
+  res.send("user details");
+});
+
+// ex: + means one or more, ab+c matches abc, abbc
+app.get("/ab+c", (req, res) => {
+  res.send("user details");
+});
+
+// similarly those can be grouped like a(bc)?d matches ad, abcd
+
+// // * means anything ex: az, abz, abcz
+// app.get("a*z", (req, res) => {
+//   res.send("user details");
+// });
+
+// // regex can be used
+// app.get(/.*fly$/, (req, res) => {
+//   res.send("user details");
+// });
