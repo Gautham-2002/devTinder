@@ -1,6 +1,8 @@
 const express = require("express");
 const connectDB = require("./config/database");
 const User = require("./models/user");
+const { validareSignUpData } = require("./utils/validatons");
+const bcrypt = require("bcrypt");
 
 const app = express();
 
@@ -9,13 +11,43 @@ app.use(express.json()); //This is a built-in middleware function in Express. It
 app.post("/signup", async (req, res) => {
   // console.log(req.body); // will be undefined if json middleware is not used
 
-  const user = new User(req.body); // creating a new instance of the User model
-  // if we send any data which is not part of schema it will be ignored
   try {
+    // first step is validation of data
+    validareSignUpData(req);
+
+    // second step is encrpting password
+    const { firstName, lastName, emailId, password } = req.body;
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    const user = new User({
+      firstName,
+      lastName,
+      emailId,
+      password: passwordHash,
+    }); // creating a new instance of the User model
+    // if we send any data which is not part of schema it will be ignored
     await user.save();
     res.send("user saved successfully");
   } catch (err) {
     console.log(err);
+    res.status(400).send("user not saved");
+  }
+});
+
+app.post("/login", async (req, res) => {
+  try {
+    const { emailId, password } = req.body;
+    const user = await User.findOne({ emailId });
+    if (!user) {
+      throw new Error("user not found, email not found"); // this is not right wat=y, never expose such details in the response errors, just "invalid credentials" would be enough
+    }
+    const isMyPasswordValid = await bcrypt.compare(password, user.password);
+    if (isMyPasswordValid) {
+      res.send("user logged in");
+    } else {
+      res.status(400).send("user not logged in");
+    }
+  } catch (err) {
     res.status(400).send("user not saved");
   }
 });
