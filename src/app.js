@@ -81,6 +81,8 @@ app.patch("/user/:userId", async (req, res) => {
   }
 });
 
+// never trust request body data, always sanitize it first and validate it and then use it or update it in the database
+
 connectDB()
   .then(() => {
     console.log("database connected");
