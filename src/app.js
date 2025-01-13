@@ -37,21 +37,21 @@ app.listen(3000, () => {
 // // here there will be no output
 // // it will not go to the next route handler
 
-app.use(
-  "/user",
-  (req, res, next) => {
-    // Route handler 1
-    console.log("handling the route user");
-    next();
-  },
-  (req, res) => {
-    // Route handler 2
-    console.log("handling the route user 2");
-    res.send("2nd Response!!");
-  }
-);
-// here the output will be "2nd Response!!"
-// it will go to the next route handler
+// app.use(
+//   "/user",
+//   (req, res, next) => {
+//     // Route handler 1
+//     console.log("handling the route user");
+//     next();
+//   },
+//   (req, res) => {
+//     // Route handler 2
+//     console.log("handling the route user 2");
+//     res.send("2nd Response!!");
+//   }
+// );
+// // here the output will be "2nd Response!!"
+// // it will go to the next route handler
 
 // app.use(
 //   "/user",
@@ -77,3 +77,55 @@ app.use(
 //   () => console.log("handler 1"),
 //   () => console.log("handler 2"),
 // ]);
+
+// app.use("/user", (req, res, next) => {
+//   console.log("handling the route user");
+//   next();
+//   // these are called MIDDLEWARE
+// });
+// app.use("/user", (req, res) => {
+//   // Route handler 2
+//   console.log("handling the route user 2");
+//   res.send("2nd Response!!");
+// });
+// // this is also acceptable and the output will be "2nd Response!!"
+// // it will go to the next route handler
+
+// // whenever we make an api call to the server, it will go through the chain of middlewares and then to the route handlers
+
+// ----------------------------------------------------------------------------------------------------------------------------------------
+
+// Handle auth middleware for all requests get, post, put, delete, ...
+// app.use("/admin", (req, res, next) => {
+//   console.log("admin auth is getting checked");
+//   const token = "token";
+//   const isAuthorized = token === "token";
+//   if (isAuthorized) {
+//     next();
+//   } else {
+//     res.status(401).send("Unauthorized request");
+//   }
+// });
+
+// app.get("/admin/getAllData", (req, res) => {
+//   res.send("All data");
+// });
+
+// app.get("/admin/deleteUser", (req, res) => {
+//   res.send("User deleted");
+// });
+
+const { adminAuth, userAuth } = require("./middleware/auth");
+app.use("/admin", adminAuth);
+
+app.get("/admin/getAllData", (req, res) => {
+  res.send("All data");
+});
+
+app.get("/admin/deleteUser", (req, res) => {
+  res.send("User deleted");
+});
+
+app.get("/user", userAuth, (req, res) => {
+  res.send("user details");
+});
