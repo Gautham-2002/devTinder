@@ -115,17 +115,46 @@ app.listen(3000, () => {
 //   res.send("User deleted");
 // });
 
-const { adminAuth, userAuth } = require("./middleware/auth");
-app.use("/admin", adminAuth);
+// // Middleware
+// const { adminAuth, userAuth } = require("./middleware/auth");
+// app.use("/admin", adminAuth);
 
-app.get("/admin/getAllData", (req, res) => {
-  res.send("All data");
-});
+// app.get("/admin/getAllData", (req, res) => {
+//   res.send("All data");
+// });
 
-app.get("/admin/deleteUser", (req, res) => {
-  res.send("User deleted");
-});
+// app.get("/admin/deleteUser", (req, res) => {
+//   res.send("User deleted");
+// });
 
-app.get("/user", userAuth, (req, res) => {
-  res.send("user details");
-});
+// app.get("/user", userAuth, (req, res) => {
+//   res.send("user details");
+// });
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------s
+
+// // Error Handlers
+// app.get("/getUserData", (req, res) => {
+//   try {
+//     throw new Error("error");
+//     res.send("user details");
+//   } catch (err) {
+//     res.status(500).send("something went wrong");
+//   }
+// });
+
+// app.get("/getUserData", (req, res) => {
+//   throw new Error("error");
+//   res.send("user details");
+// });
+
+// app.get("/", (err, req, res, next) => {
+//   // wild card error handler
+//   // this should be the last route handler, as we know the order of the route handlers is important
+//   if (err) {
+//     res.status(500).send("something went wrong");
+//   }
+// });
+// // if 2 params are there then they are req, res
+// // if 3 params are there then they are req, res, next
+// // if 4 params are there then they are err, req, res, next
