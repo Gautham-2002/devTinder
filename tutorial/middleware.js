@@ -143,6 +143,8 @@ app.listen(3000, () => {
 //   }
 // });
 
+// -------------------------------------------------------------------------
+
 // app.get("/getUserData", (req, res) => {
 //   throw new Error("error");
 //   res.send("user details");
