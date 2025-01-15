@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 var validator = require("validator");
+const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema(
   {
@@ -66,6 +67,28 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true } // this adds createdAt and updatedAt fields for each document
 );
+
+// schema methods
+userSchema.methods.getJWT = async function () {
+  const user = this;
+
+  const token = await jwt.sign({ _id: user._id }, "devTinder@2707");
+
+  return token;
+};
+
+userSchema.methods.validatePassword = async function (passwordInputByUser) {
+  const user = this;
+
+  const passwordHash = user.password;
+
+  const isMyPasswordValid = await bcrypt.compare(
+    passwordInputByUser,
+    passwordHash
+  );
+
+  return isMyPasswordValid;
+};
 
 const User = mongoose.model("User", userSchema); // always starts with a capital letter
 

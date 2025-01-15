@@ -45,14 +45,17 @@ app.post("/login", async (req, res) => {
     if (!user) {
       throw new Error("user not found, email not found"); // this is not right way, never expose such details in the response errors, just "invalid credentials" would be enough
     }
-    const isMyPasswordValid = await bcrypt.compare(password, user.password);
+    // const isMyPasswordValid = await bcrypt.compare(password, user.password);
+    const isMyPasswordValid = await user.validatePassword(password);
     if (isMyPasswordValid) {
       // create a JWT token
 
       // const token = await jwt.sign({ _id: user._id }, "devTinder@2707", {
       //   expiresIn: "7d",
       // });
-      const token = await jwt.sign({ _id: user._id }, "devTinder@2707");
+      // const token = await jwt.sign({ _id: user._id }, "devTinder@2707");
+
+      const token = await user.getJWT();
 
       // Add token to the cookie send the response back to the client
       // res.cookie("token", token);
