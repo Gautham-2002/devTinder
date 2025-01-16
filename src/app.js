@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json()); // This is a built-in middleware function in Express. It parses incoming requests with JSON payloads and is based on body-parser.
 app.use(cookieParser()); // this middleware is used to parse cookies and access them in the request object
 
-app.use("/", authRouter);
+app.use("/", authRouter); // these are routers, to the express we can pass routers, middlewares and request handlers
 app.use("/", profileRouter);
 app.use("/", requestRouter);
 

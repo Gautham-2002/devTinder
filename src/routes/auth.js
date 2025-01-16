@@ -64,4 +64,18 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.post("/logout", async (req, res) => {
+  //   res.cookie("token", null, {
+  //     expires: new Date(Date.now()),
+  //   });
+  //   res.send("user logged out");
+
+  // Do any cleanup work here
+  res
+    .cookie("token", null, {
+      expires: new Date(Date.now()),
+    })
+    .send("user logged out"); // we can chain the methods
+});
+
 module.exports = router;
