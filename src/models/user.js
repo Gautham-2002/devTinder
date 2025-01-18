@@ -41,14 +41,19 @@ const userSchema = new mongoose.Schema(
     },
     gender: {
       type: String,
-      validate(value) {
-        // this will only run when we create a new user
-
-        // to check the validations while updating the user we need to add "runValidators: true" in the options
-        if (!["male", "female", "other"].includes(value)) {
-          throw new Error("Invalid gender");
-        }
+      enum: {
+        values: ["male", "female", "other"],
+        message: `{VALUE} is not a valid gender`,
       },
+      // validate(value) {
+      //   // this are called custom validators
+      //   // this will only run when we create a new user
+
+      //   // to check the validations while updating the user we need to add "runValidators: true" in the options
+      //   if (!["male", "female", "other"].includes(value)) {
+      //     throw new Error("Invalid gender");
+      //   }
+      // },
     },
     photoUrl: {
       type: String,
@@ -91,6 +96,6 @@ userSchema.methods.validatePassword = async function (passwordInputByUser) {
   return isMyPasswordValid;
 };
 
-const User = mongoose.model("User", userSchema); // always starts with a capital letter
+const User = new mongoose.model("User", userSchema); // always starts with a capital letter
 
 module.exports = User;
