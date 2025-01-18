@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema(
     emailId: {
       type: String,
       required: true,
-      unique: true,
+      unique: true, // this will be indexed by default
       lowercase: true,
       trim: true,
       validate(value) {
