@@ -65,12 +65,13 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/logout", async (req, res) => {
+  // Do any cleanup work here
+
   //   res.cookie("token", null, {
   //     expires: new Date(Date.now()),
   //   });
   //   res.send("user logged out");
 
-  // Do any cleanup work here
   res
     .cookie("token", null, {
       expires: new Date(Date.now()),
