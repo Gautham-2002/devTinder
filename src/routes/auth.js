@@ -56,7 +56,7 @@ router.post("/login", async (req, res) => {
         expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
       res.json({
-        menubar: "user logged in",
+        message: "user logged in",
         user,
       });
     } else {
