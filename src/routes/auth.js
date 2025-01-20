@@ -55,7 +55,10 @@ router.post("/login", async (req, res) => {
       res.cookie("token", token, {
         expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
-      res.send("user logged in");
+      res.json({
+        menubar: "user logged in",
+        user,
+      });
     } else {
       res.status(400).send("user not logged in");
     }
