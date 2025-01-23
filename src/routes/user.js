@@ -4,7 +4,7 @@ const { userAuth } = require("../middleware/auth");
 const ConnectionRequest = require("../models/connectionRequest");
 const User = require("../models/user");
 
-const USER_SAFE_DATA = "firstName lastName photoUrl about skills";
+const USER_SAFE_DATA = "firstName lastName photoUrl about skills age gender";
 
 userRouter.get("/user/requests/recieved", userAuth, async (req, res) => {
   try {
@@ -17,7 +17,15 @@ userRouter.get("/user/requests/recieved", userAuth, async (req, res) => {
     const connectionRequests = await ConnectionRequest.find({
       toUserId: loggedInUser._id,
       status: "interested",
-    }).populate("fromUserId", ["firstName", "lastName"]); // this will send only firstName and lastName from the user collection
+    }).populate("fromUserId", [
+      "firstName",
+      "lastName",
+      "photoUrl",
+      "about",
+      "skills",
+      "age",
+      "gender",
+    ]); // this will send only firstName and lastName from the user collection
     // ["firstName", "lastName"] or "firstName lastName" this is also valid
 
     res.json({
@@ -39,8 +47,24 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
         { fromUserId: loggedInUser._id, status: "accepted" },
       ],
     })
-      .populate("fromUserId", ["firstName", "lastName"])
-      .populate("toUserId", ["firstName", "lastName"]);
+      .populate("fromUserId", [
+        "firstName",
+        "lastName",
+        "photoUrl",
+        "about",
+        "skills",
+        "age",
+        "gender",
+      ])
+      .populate("toUserId", [
+        "firstName",
+        "lastName",
+        "photoUrl",
+        "about",
+        "skills",
+        "age",
+        "gender",
+      ]);
 
     const data = connectionRequests.map((connectionRequest) => {
       if (connectionRequest.fromUserId.equals(loggedInUser._id)) {
@@ -80,14 +104,14 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
 
     const hideUserFromFeed = new Set();
     connectionRequests.forEach((req) => {
-      hideUserFromFeed.add(req.fromUserId.toString());
-      hideUserFromFeed.add(req.toUserId.toString());
+      hideUserFromFeed.add(req.fromUserId._id.toString());
+      hideUserFromFeed.add(req.toUserId._id.toString());
     });
 
     const users = await User.find({
       $and: [
         { _id: { $nin: Array.from(hideUserFromFeed) } },
-        { $ne: { _id: loggedInUser._id } },
+        { _id: { $ne: [loggedInUser._id] } },
       ],
     })
       .select(USER_SAFE_DATA)
@@ -99,6 +123,7 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
       data: users,
     });
   } catch (err) {
+    console.log(err);
     res.status(400).send("something went wrong");
   }
 });

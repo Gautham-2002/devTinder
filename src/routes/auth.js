@@ -23,8 +23,17 @@ router.post("/signup", async (req, res) => {
       password: passwordHash,
     }); // creating a new instance of the User model
     // if we send any data which is not part of schema it will be ignored
-    await user.save();
-    res.send("user saved successfully");
+    const savedUser = await user.save();
+    const token = await savedUser.getJWT();
+
+    res.cookie("token", token, {
+      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    });
+    // res.send("user saved successfully");
+    res.json({
+      message: "user saved successfully",
+      user: savedUser,
+    });
   } catch (err) {
     console.log(err);
     res.status(400).send("user not saved");
